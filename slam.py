@@ -1,19 +1,29 @@
 import cv2
-import pygame
+import sdl2
+import sdl2.ext
 
 # commons
 W = 1920 // 2
 H = 1080 // 2
 
-# creating pygame window
-pygame.init()
-screen = pygame.display.set_mode((W, H))
-
+sdl2.ext.init()
+window = sdl2.ext.Window("Test Board", size=(W, H))
+window.show()
 
 
 def process_frame(frame):
     img = cv2.resize(frame, (W, H))
-    print(img.shape)
+
+    # breaking process
+    events = sdl2.ext.get_events()
+    for event in events:
+        if event.type == sdl2.SDL_QUIT:
+            exit(0)
+
+    # writing and refreshing sdl surface
+    surf = sdl2.ext.pixels2d(window.get_surface())
+    surf[:] = img.swapaxes(0, 1)[:, :, 0]
+    window.refresh()
 
 
 if __name__ == "__main__":
@@ -24,5 +34,3 @@ if __name__ == "__main__":
             process_frame(frame)
         else:
             break
-
-    # print("hello world")
