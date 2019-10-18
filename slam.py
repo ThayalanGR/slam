@@ -8,10 +8,13 @@ from extractor import Extractor
 # commons
 W = 1920 // 2
 H = 1080 // 2
+F = 1
 
 # objects
 display = Display(W, H)
-fe = Extractor()
+K = np.array([[F, 0, W//2], [0, F, H//2], [0, 0, 1]])
+print(K)
+fe = Extractor(K)
 
 
 def process_frame(frame):
@@ -20,8 +23,8 @@ def process_frame(frame):
     print("matches", len(matches))
 
     for pt1, pt2 in matches:
-        u1, v1 = map(lambda x: int(round(x)), pt1)
-        u2, v2 = map(lambda x: int(round(x)), pt2)
+        u1, v1 = fe.denormalize(pt1)
+        u2, v2 = fe.denormalize(pt2)
         cv2.circle(img, (u1, v1), color=(0, 255, 0), radius=3)
         cv2.line(img, (u1, v1), (u2, v2), color=(255, 0, 0))
 
