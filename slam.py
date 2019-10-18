@@ -16,13 +16,15 @@ fe = Extractor()
 
 def process_frame(frame):
     img = cv2.resize(frame, (W, H))
-    kps, des, matches = fe.extract(img)
-    if matches is None:
-        return
+    matches = fe.extract(img)
+    print("matches", len(matches))
 
-    for p in kps:
-        u, v = map(lambda x: int(round(x)), p.pt)
-        cv2.circle(img, (u, v), color=(0, 255, 0), radius=3)
+    for pt1, pt2 in matches:
+        u1, v1 = map(lambda x: int(round(x)), pt1)
+        u2, v2 = map(lambda x: int(round(x)), pt2)
+        cv2.circle(img, (u1, v1), color=(0, 255, 0), radius=3)
+        cv2.line(img, (u1, v1), (u2, v2), color=(255, 0, 0))
+
     display.paint(img)
 
 
